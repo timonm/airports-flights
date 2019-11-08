@@ -1,14 +1,23 @@
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import fetch from 'isomorphic-unfetch';
 import { NextSeo } from 'next-seo';
 import { Fade } from 'react-reveal';
+import dynamic from 'next/dynamic';
 import Layout from '../components/Layout';
 
 // import dummy from '../utils/dummy.json'; // TO BE REMOVED
 import colors from '../css/colors';
 
+const MapWithNoSSR = dynamic(() => import('../components/Map'), {
+    ssr: false,
+});
+
 function Index(props) {
-    const { data } = props;
+    const [isReady, setHasRendered] = useState(false);
+    useEffect(() => {
+        setHasRendered(true);
+    }, [isReady]);
     return (
         <>
             <NextSeo
@@ -18,7 +27,7 @@ function Index(props) {
             <Layout home column>
                 <Main>
                     <Fade top duration={1000} delay={300}>
-                        Jauyh
+                        {isReady && <MapWithNoSSR {...props} />}
                     </Fade>
                 </Main>
                 <Wrapper name="activities"></Wrapper>
@@ -28,10 +37,15 @@ function Index(props) {
 }
 
 Index.getInitialProps = async ({ req }) => {
-    const url = 'https://cometari-airportsfinder-v1.p.rapidapi.com/api/cities/by-airports?code=lax';
+    const radius = 500;
+    const lat = '39.470242';
+    const lng = '-0.376800';
+    const url = `https://cometari-airportsfinder-v1.p.rapidapi.com/api/airports/by-radius?radius=${radius}&lng=${lng}&lat=${lat}`;
     const res = await fetch(url, {
         method: 'GET',
         headers: {
+            // 'x-rapidapi-host': process.env.AIRPORTS_KEY,
+            // 'x-rapidapi-key': process.env.AIRPORTS_SECRET,
             'x-rapidapi-host': 'cometari-airportsfinder-v1.p.rapidapi.com',
             'x-rapidapi-key': 'a094aac6e2msh9bd187ec1c61e94p1a5fcfjsnfa3703e7f3e3',
         },
@@ -41,8 +55,11 @@ Index.getInitialProps = async ({ req }) => {
             console.log(err);
         });
     const data = await res.json();
+    console.log(data);
     return {
         data,
+        lat,
+        lng,
     };
 };
 

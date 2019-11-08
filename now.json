@@ -1,0 +1,20 @@
+{
+    "name": "airports-flights",
+    "version": 2,
+    "alias": "airports.flights",
+    "regions": ["bru"],
+    "scope": "distrikt13",
+    "env": {
+        "AIRPORTS_KEY": "@airports-key",
+        "AIRPORTS_SECRET": "@airports-secret"
+    },
+    "build": {
+        "env": {
+            "AIRPORTS_KEY": "@airports-key",
+            "AIRPORTS_SECRET": "@airports-secret"
+        }
+    },
+    "builds": [
+      { "src": "package.json", "use": "@now/next" }
+    ]
+  }
