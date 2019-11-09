@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import fetch from 'isomorphic-unfetch';
 import { NextSeo } from 'next-seo';
 import { Fade } from 'react-reveal';
 import dynamic from 'next/dynamic';
